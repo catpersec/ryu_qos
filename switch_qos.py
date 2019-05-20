@@ -85,7 +85,7 @@ class SwitchSimple1(app_manager.RyuApp):
             out_port = self.mac_to_port[dpid][dst]
         else:
             out_port = ofproto.OFPP_FLOOD
-#
+####
         actions = [parser.OFPActionOutput(out_port)]
 
         # install a flow to avoid packet_in next time
