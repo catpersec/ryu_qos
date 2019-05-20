@@ -149,7 +149,7 @@ class ConfSwitchAPI(app_manager.RyuApp):
     _CONTEXTS = {
         'conf_switch': conf_switch.ConfSwitchSet,
     }
-
+#
     def __init__(self, *args, **kwargs):
         super(ConfSwitchAPI, self).__init__(*args, **kwargs)
         self.conf_switch = kwargs['conf_switch']
