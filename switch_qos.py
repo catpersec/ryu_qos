@@ -6,7 +6,7 @@ from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
-
+#Script test 
 #Inicjalizacja klasy SwitchSimple1
 class SwitchSimple1(app_manager.RyuApp):
     #Konfiguracja protokołu OF1.3
