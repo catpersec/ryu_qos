@@ -7,21 +7,22 @@ from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
 
-#Skrypt działa jak marzenie! :))))
-
-
 #Inicjalizacja klasy SwitchSimple1
-class SwitchSimple1(app_manager.RyuApp):
+class QoSSwitch(app_manager.RyuApp):
     #Konfiguracja protokołu OF1.3
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
-        super(SwitchSimple1, self).__init__(*args, **kwargs)
+        super(QoSSwitch, self).__init__(*args, **kwargs)
         #Inicjalizacja tablicy mac (mac_to_port)
         self.mac_to_port = {}
-    #event_handler -> obsług wiadomości przychodzących OD switcha
+    #event_handler -> obsług wiadomości Konfiguracyjnych
+    #i "stanowych" przychodzących OD switcha
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
+
+    ###############################
     #Table-miss flow entry
+    ###############################
     #Zdefiniowanie flow, które ma być domyślnie przesyłane do kontrolera
     #dane flow określa co switch ma zrobić w przypadku, gdy przychodzący
     #pakiet nie jest zgodny z żadnym innym wpisem
@@ -39,6 +40,7 @@ class SwitchSimple1(app_manager.RyuApp):
         #Flow z wartością priority = 0 (ostatnie dopasowanie)
         self.add_flow(datapath, 0, match, actions)
 
+
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -54,6 +56,11 @@ class SwitchSimple1(app_manager.RyuApp):
                                     match=match, instructions=inst, table_id=1)
         datapath.send_msg(mod)
 
+
+    ###########################################################
+    # Packet in handler - obsługa wiadomości typu "Packet-IN"
+    ###########################################################
+    #
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
         # If you hit this you might want to increase
